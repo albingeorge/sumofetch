@@ -1,14 +1,31 @@
 package sumo
 
 import (
+	"bytes"
 	"encoding/json"
 	"encoding/xml"
+	"net/http"
 	"strconv"
 	"time"
 )
 
 type createSearchQueryResult struct {
 	QueryID string `xml:"searchQueryId"`
+}
+
+func (sumo Sumocreds) createSearchQueryID(query string) string {
+	url := "https://service.eu.sumologic.com/json/v2/searchquery/create"
+
+	searchInputs := generateSearchQueryInputs(query)
+
+	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(searchInputs))
+
+	sumo.setHeaders(req)
+	response := sendRequest(req)
+
+	id := fetchQueryIDFromResponse(response)
+
+	return id
 }
 
 // Generate the body for search query for the past 2 hours

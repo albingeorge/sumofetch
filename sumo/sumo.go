@@ -1,7 +1,6 @@
 package sumo
 
 import (
-	"bytes"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -16,27 +15,13 @@ type sumo interface {
 	Search(string) map[string]string
 }
 
-type sumocreds struct {
+// Sumocreds - Credentials structure
+type Sumocreds struct {
 	APISession    string
 	SumoServiceID string
 }
 
-func (sumo sumocreds) createSearchQueryID(query string) string {
-	url := "https://service.eu.sumologic.com/json/v2/searchquery/create"
-
-	searchInputs := generateSearchQueryInputs("abc")
-
-	req, _ := http.NewRequest("POST", url, bytes.NewBuffer(searchInputs))
-
-	sumo.setHeaders(req)
-	response := sendRequest(req)
-
-	id := fetchQueryIDFromResponse(response)
-
-	return id
-}
-
-func (sumo sumocreds) setHeaders(req *http.Request) {
+func (sumo Sumocreds) setHeaders(req *http.Request) {
 	req.Header.Set("ApiSession", sumo.APISession)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Cookie", "SUMOSERVICEID="+sumo.SumoServiceID)
@@ -56,9 +41,12 @@ func sendRequest(req *http.Request) []byte {
 	return body
 }
 
-func (sumo sumocreds) Search(query string) []map[string]string {
+// Search - Creates a search qyery, and fetches it's results
+func (sumo Sumocreds) Search(query string) []map[string]string {
 
 	queryID := sumo.createSearchQueryID(query)
+
+	// exportID := sumo.createExportID(queryID)
 
 	fmt.Println("queryID", queryID)
 
@@ -67,12 +55,13 @@ func (sumo sumocreds) Search(query string) []map[string]string {
 	return ret
 }
 
-// func (sumo sumocreds) sendAPIRequtest(url string) string {
+// func (sumo Sumocreds) sendAPIRequtest(url string) string {
 
 // 	return ""
 // }
 
-func New(conf config.Config) sumocreds {
-	creds := sumocreds{APISession: conf.APISession, SumoServiceID: conf.SumoServiceID}
+// New -  Initiates a new Sumocreds object
+func New(conf config.Config) Sumocreds {
+	creds := Sumocreds{APISession: conf.APISession, SumoServiceID: conf.SumoServiceID}
 	return creds
 }

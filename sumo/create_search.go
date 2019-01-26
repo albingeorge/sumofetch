@@ -14,7 +14,7 @@ type createSearchQueryResult struct {
 }
 
 func (sumo Sumocreds) createSearchQueryID(query string) string {
-	url := "https://service.eu.sumologic.com/json/v2/searchquery/create"
+	url := sumo.BaseUrl
 
 	searchInputs := generateSearchQueryInputs(query)
 
@@ -29,7 +29,7 @@ func (sumo Sumocreds) createSearchQueryID(query string) string {
 }
 
 // Generate the body for search query for the past 2 hours
-// Will accept the timerange if required in the future
+// Will accept the time range if required in the future
 func generateSearchQueryInputs(query string) []byte {
 
 	current := time.Now()

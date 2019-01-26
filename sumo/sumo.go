@@ -11,12 +11,12 @@ import (
 type sumo interface {
 	createSearchQueryID(string) string
 
-	sendAPIRequtest(string) string
 	Search(string) map[string]string
 }
 
 // Sumocreds - Credentials structure
 type Sumocreds struct {
+	BaseUrl       string
 	APISession    string
 	SumoServiceID string
 }
@@ -50,18 +50,15 @@ func (sumo Sumocreds) Search(query string) []map[string]string {
 
 	fmt.Println("queryID", queryID)
 
-	m := map[string]string{"a": "b"}
-	ret := []map[string]string{m}
+	ret := sumo.fetchQueryResults(queryID)
+
 	return ret
 }
 
-// func (sumo Sumocreds) sendAPIRequtest(url string) string {
-
-// 	return ""
-// }
-
 // New -  Initiates a new Sumocreds object
 func New(conf config.Config) Sumocreds {
-	creds := Sumocreds{APISession: conf.APISession, SumoServiceID: conf.SumoServiceID}
+	baseUrl := "https://api.eu.sumologic.com/api/v1/search/jobs"
+
+	creds := Sumocreds{BaseUrl: baseUrl, APISession: conf.APISession, SumoServiceID: conf.SumoServiceID}
 	return creds
 }

@@ -16,15 +16,16 @@ type sumo interface {
 
 // Sumocreds - Credentials structure
 type Sumocreds struct {
-	BaseUrl       string
-	APISession    string
-	SumoServiceID string
+	BaseUrl   string
+	AccessID  string
+	AccessKey string
 }
 
 func (sumo Sumocreds) setHeaders(req *http.Request) {
-	req.Header.Set("ApiSession", sumo.APISession)
+	req.SetBasicAuth(sumo.AccessID, sumo.AccessKey)
+
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Cookie", "SUMOSERVICEID="+sumo.SumoServiceID)
+	req.Header.Set("Accept", "application/json")
 }
 
 func sendRequest(req *http.Request) []byte {
@@ -42,7 +43,7 @@ func sendRequest(req *http.Request) []byte {
 }
 
 // Search - Creates a search qyery, and fetches it's results
-func (sumo Sumocreds) Search(query string) []map[string]string {
+func (sumo Sumocreds) Search(query string) []ResponseFormat {
 
 	queryID := sumo.createSearchQueryID(query)
 
@@ -59,6 +60,6 @@ func (sumo Sumocreds) Search(query string) []map[string]string {
 func New(conf config.Config) Sumocreds {
 	baseUrl := "https://api.eu.sumologic.com/api/v1/search/jobs"
 
-	creds := Sumocreds{BaseUrl: baseUrl, APISession: conf.APISession, SumoServiceID: conf.SumoServiceID}
+	creds := Sumocreds{BaseUrl: baseUrl, AccessID: conf.AccessID, AccessKey: conf.AccessKey}
 	return creds
 }

@@ -6,8 +6,8 @@ import (
 )
 
 type Config struct {
-	APISession    string
-	SumoServiceID string
+	AccessID  string
+	AccessKey string
 }
 
 func GetConfigs() (Config, error) {

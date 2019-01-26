@@ -3,15 +3,8 @@ package sumo
 import (
 	"bytes"
 	"encoding/json"
-	"encoding/xml"
 	"net/http"
-	"strconv"
-	"time"
 )
-
-type createSearchQueryResult struct {
-	QueryID string `xml:"searchQueryId"`
-}
 
 func (sumo Sumocreds) createSearchQueryID(query string) string {
 	url := sumo.BaseUrl
@@ -32,33 +25,39 @@ func (sumo Sumocreds) createSearchQueryID(query string) string {
 // Will accept the time range if required in the future
 func generateSearchQueryInputs(query string) []byte {
 
-	current := time.Now()
-	now := current.Unix()
-
-	nowString := strconv.FormatInt(now, 10) + "000"
-
-	then := current.Add(time.Duration(-2) * time.Hour)
-	thenUnix := then.Unix()
-
-	twoHoursBack := strconv.FormatInt(thenUnix, 10) + "000"
+	//current := time.Now()
+	//nowString := current.Format(time.RFC3339)
+	//
+	//then := current.Add(time.Duration(-6) * time.Hour)
+	//twoHoursBack := then.Format(time.RFC3339)
+	//
+	//search := map[string]interface{}{
+	//	"query":    query,
+	//	"from":     twoHoursBack,
+	//	"to":       nowString,
+	//	"timeZone": "Asia/Kolkata",
+	//}
 
 	search := map[string]interface{}{
-		"queryString":     query,
-		"startMillis":     twoHoursBack,
-		"endMillis":       nowString,
-		"byReceiptTime":   false,
-		"timeZone":        "Asia/Kolkata",
-		"isAllTime":       false,
-		"fromSavedSearch": false,
+		"query":    query,
+		"from":     "2019-01-25T11:00",
+		"to":       "2019-01-25T15:00",
+		"timeZone": "Asia/Kolkata",
 	}
+
 	jsonString, _ := json.Marshal(search)
 
 	return jsonString
 }
 
 func fetchQueryIDFromResponse(res []byte) string {
-	var search createSearchQueryResult
-	xml.Unmarshal(res, &search)
 
-	return search.QueryID
+	type createSearchQueryResult struct {
+		ID string
+	}
+
+	var search createSearchQueryResult
+	json.Unmarshal(res, &search)
+
+	return search.ID
 }

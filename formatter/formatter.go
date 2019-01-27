@@ -15,6 +15,9 @@ type FormattedContent struct {
 
 func Format(format []sumo.ResponseFormat) []FormattedContent {
 	result := []FormattedContent{}
+
+	callbackCount := 0
+
 	for _, response := range format {
 		if response.Code == globals.GATEWAY_SOAP_REQUEST {
 			result = append(result, getSoapRequestFormattedContent(response))
@@ -26,7 +29,18 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 		}
 
 		if response.Code == globals.PAYMENT_CALLBACK_REQUEST {
+			callbackCount = callbackCount + 1
 			result = append(result, getCallbackRequestFormattedContent(response))
+
+			// If this is the second callback, decline the transaction
+			if callbackCount > 1 {
+				r := FormattedContent{
+					Header:   "Payment declined due to duplicate callback",
+					DateTime: response.DateTime,
+				}
+
+				result = append(result, r)
+			}
 		}
 
 		if response.Code == globals.GATEWAY_REQUEST_TIMEOUT {
@@ -48,7 +62,6 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 				r := FormattedContent{
 					Header:   "Authorize request timed out",
 					DateTime: response.DateTime,
-					Content:  "",
 				}
 
 				result = append(result, r)
@@ -60,12 +73,20 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 			r := FormattedContent{
 				Header:   "Payment declined due to Invalid checksum",
 				DateTime: response.DateTime,
-				Content:  "",
 			}
 
 			result = append(result, r)
 
 			break
+		}
+
+		if response.Code == globals.GATEWAY_ERROR_DATA_MISMATCH {
+			r := FormattedContent{
+				Header:   "Payment declined due to data mismatch",
+				DateTime: response.DateTime,
+			}
+
+			result = append(result, r)
 		}
 	}
 

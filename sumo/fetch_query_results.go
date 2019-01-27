@@ -26,6 +26,7 @@ func (sumo Sumocreds) fetchQueryResults(queryID string) []ResponseFormat {
 
 type Content struct {
 	Code                    string `json:"code"`
+	ErrorCode               string `json:"context.code"`
 	Timestamp               string `json:"_messagetime"`
 	PaymentId               string `json:"context.payment_id"`
 	SoapResponse            string `json:"context.response.callpaysecureresult"`
@@ -152,6 +153,11 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 	if content.Code == globals.GATEWAY_REQUEST_TIMEOUT {
 		r.SoapRequest = content.SoapRequest
 		r.Command = content.Command
+	}
+
+	// If it's an error_exception, the actual code is stored in context.code field
+	if content.Code == "ERROR_EXCEPTION" {
+		r.Code = content.ErrorCode
 	}
 
 	return r, nil

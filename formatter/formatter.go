@@ -33,13 +33,27 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 			result = append(result, getGatewayTimeoutRequestFormattedContent(response))
 
 			// After adding the log for Soap Request, we should also add that the payment
-			// timed out at the current log's time
-			r := FormattedContent{
-				Header:   "Payment failed because request timed out",
-				DateTime: response.DateTime,
-				Content:  "",
+			// timed out at the current log's time.
+			// This need not be there for authorize command, since if authorize times out
+			// we can transaction status to verify the payment
+			if response.Command != "authorize" {
+				r := FormattedContent{
+					Header:   "Payment failed because request timed out",
+					DateTime: response.DateTime,
+					Content:  "",
+				}
+
+				result = append(result, r)
+			} else {
+				r := FormattedContent{
+					Header:   "Authorize request timed out",
+					DateTime: response.DateTime,
+					Content:  "",
+				}
+
+				result = append(result, r)
 			}
-			result = append(result, r)
+
 		}
 	}
 

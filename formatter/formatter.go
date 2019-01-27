@@ -71,13 +71,11 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 
 		if response.Code == globals.GATEWAY_CHECKSUM_VERIFY_FAILED {
 			r := FormattedContent{
-				Header:   "Payment declined due to Invalid checksum",
+				Header:   "Payment declined due to invalid checksum",
 				DateTime: response.DateTime,
 			}
 
 			result = append(result, r)
-
-			break
 		}
 
 		if response.Code == globals.GATEWAY_ERROR_DATA_MISMATCH {

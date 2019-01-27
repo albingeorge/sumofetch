@@ -41,8 +41,8 @@ func generateSearchQueryInputs(query string) []byte {
 
 	search := map[string]string{
 		"query":    query,
-		"from":     "2019-01-08T00:00",
-		"to":       "2019-01-08T23:59",
+		"from":     "2019-01-05T00:00",
+		"to":       "2019-01-05T23:59",
 		"timeZone": "Asia/Kolkata",
 	}
 	jsonString, _ := json.Marshal(search)

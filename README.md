@@ -12,6 +12,7 @@ Fetch and format Sumologic logs for Certification
 ### TODO
 - Print output to a word document instead of to stdout
 - Handle callback request timeout case
+- Handle search job status, i.e poll the search status API till it's ready to be queried. As of now, we're simply waiting for 2 seconds.
 
 ### Improvements
  

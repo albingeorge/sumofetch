@@ -3,6 +3,7 @@ package sumo
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -38,13 +39,12 @@ func generateSearchQueryInputs(query string) []byte {
 	//	"timeZone": "Asia/Kolkata",
 	//}
 
-	search := map[string]interface{}{
+	search := map[string]string{
 		"query":    query,
 		"from":     "2019-01-02T00:00",
 		"to":       "2019-01-02T23:59",
 		"timeZone": "Asia/Kolkata",
 	}
-
 	jsonString, _ := json.Marshal(search)
 
 	return jsonString
@@ -57,7 +57,11 @@ func fetchQueryIDFromResponse(res []byte) string {
 	}
 
 	var search createSearchQueryResult
-	json.Unmarshal(res, &search)
+	err := json.Unmarshal(res, &search)
+
+	if err != nil {
+		fmt.Println("Fetching search id from Json response failed!")
+	}
 
 	return search.ID
 }

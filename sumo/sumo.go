@@ -1,7 +1,6 @@
 package sumo
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -47,9 +46,7 @@ func (sumo Sumocreds) Search(query string) []ResponseFormat {
 
 	queryID := sumo.createSearchQueryID(query)
 
-	// exportID := sumo.createExportID(queryID)
-
-	fmt.Println("queryID", queryID)
+	//fmt.Println("queryID", queryID)
 
 	ret := sumo.fetchQueryResults(queryID)
 
@@ -61,5 +58,6 @@ func New(conf config.Config) Sumocreds {
 	baseUrl := "https://api.eu.sumologic.com/api/v1/search/jobs"
 
 	creds := Sumocreds{BaseUrl: baseUrl, AccessID: conf.AccessID, AccessKey: conf.AccessKey}
+
 	return creds
 }

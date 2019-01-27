@@ -1,6 +1,7 @@
 package sumo
 
 import (
+	"bitbucket.org/albingeorgee/sumofetch/globals"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -52,7 +53,7 @@ type JsonData struct {
 
 type ResponseFormat struct {
 	Code            string
-	DateTime        string
+	DateTime        time.Time
 	Command         string
 	SoapRequest     string
 	SoapResponse    string
@@ -107,7 +108,7 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 		DateTime: date,
 	}
 	// This is soap requests in readable format. Ignore these
-	if content.Code == "GATEWAY_PAYMENT_REQUEST" {
+	if content.Code == globals.GATEWAY_PAYMENT_REQUEST {
 		//fmt.Println("content.RequestCommand", content.RequestCommand)
 		if content.RequestCommand != "" {
 			return r, errors.New("Ignore this")
@@ -124,7 +125,7 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 
 	}
 
-	if content.Code == "PAYMENT_CALLBACK_REQUEST" {
+	if content.Code == globals.PAYMENT_CALLBACK_REQUEST {
 		r.CallbackRequest = map[string]string{
 			"AccuResponseCode": content.AccuResponseCode,
 			"session":          content.Session,
@@ -133,7 +134,7 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 		}
 	}
 
-	if content.Code == "GATEWAY_SOAP_REQUEST" {
+	if content.Code == globals.GATEWAY_SOAP_REQUEST {
 		r.SoapRequest = content.SoapRequest
 		r.SoapResponse = content.SoapResponse
 		r.Command = content.Command
@@ -142,11 +143,11 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 	return r, nil
 }
 
-func formatDateTime(d string) string {
+func formatDateTime(d string) time.Time {
 	intTime, _ := strconv.ParseInt(d, 10, 64)
 	date := time.Unix((intTime / 1000), 0)
 	istLoc, _ := time.LoadLocation("Asia/Kolkata")
 	date = date.In(istLoc)
 
-	return date.Format("01/02/2006 15:04:05")
+	return date
 }

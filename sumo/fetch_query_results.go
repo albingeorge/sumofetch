@@ -16,7 +16,7 @@ func (sumo Sumocreds) fetchQueryResults(queryID string) []ResponseFormat {
 	req, _ := http.NewRequest("GET", url, nil)
 	sumo.setHeaders(req)
 
-	time.Sleep(2 * time.Second)
+	time.Sleep(5 * time.Second)
 	response := sendRequest(req)
 
 	res := parseResponse(response)
@@ -157,6 +157,7 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 
 	// If it's an error_exception, the actual code is stored in context.code field
 	if content.Code == "ERROR_EXCEPTION" {
+		//fmt.Printf("+%v\n", content)
 		r.Code = content.ErrorCode
 	}
 

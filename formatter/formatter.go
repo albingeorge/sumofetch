@@ -79,6 +79,16 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 			result = append(result, r)
 		}
 
+		if response.Code == globals.GATEWAY_ERROR_USER_INACTIVE {
+			r := FormattedContent{
+				Header:   "Payment declined due to user inactivity",
+				DateTime: response.DateTime,
+				Content:  "",
+			}
+
+			result = append(result, r)
+		}
+
 		if response.Code == globals.GATEWAY_CHECKSUM_VERIFY_FAILED {
 			r := FormattedContent{
 				Header:   "Payment declined due to invalid checksum",

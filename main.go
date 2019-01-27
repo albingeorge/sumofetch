@@ -24,5 +24,5 @@ func main() {
 	//formatter.Format(results)
 	formattedResult := formatter.Format(results)
 
-	printer.PrintStdout(formattedResult)
+	printer.PrintDoc(formattedResult)
 }

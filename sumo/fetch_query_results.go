@@ -117,9 +117,9 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 		Code:     content.Code,
 		DateTime: date,
 	}
-	// This is soap requests in readable format. Ignore these
+
 	if content.Code == globals.GATEWAY_PAYMENT_REQUEST {
-		//fmt.Println("content.RequestCommand", content.RequestCommand)
+		// This is soap requests in readable format. Ignore these
 		if content.RequestCommand != "" {
 			return r, errors.New("Ignore this")
 		}
@@ -132,7 +132,6 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 			"session":          content.RequestSession,
 			"AccuRequestId":    content.RequestAccuRequestId,
 		}
-
 	}
 
 	if content.Code == globals.PAYMENT_CALLBACK_REQUEST {
@@ -147,6 +146,11 @@ func parseSingleMessage(content Content) (ResponseFormat, error) {
 	if content.Code == globals.GATEWAY_SOAP_REQUEST {
 		r.SoapRequest = content.SoapRequest
 		r.SoapResponse = content.SoapResponse
+		r.Command = content.Command
+	}
+
+	if content.Code == globals.GATEWAY_REQUEST_TIMEOUT {
+		r.SoapRequest = content.SoapRequest
 		r.Command = content.Command
 	}
 

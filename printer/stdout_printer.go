@@ -12,7 +12,5 @@ func PrintStdout(input []formatter.FormattedContent) {
 		fmt.Println("DateTime: " + content.DateTime.Format("01/02/2006 15:04:05") + "\n")
 
 		fmt.Println(content.Content + "\n")
-
-		fmt.Println(content.Footer + "\n\n")
 	}
 }

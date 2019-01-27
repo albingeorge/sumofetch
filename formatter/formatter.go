@@ -11,7 +11,6 @@ type FormattedContent struct {
 	Header   string
 	DateTime time.Time
 	Content  string
-	Footer   string
 }
 
 func Format(format []sumo.ResponseFormat) []FormattedContent {
@@ -28,6 +27,19 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 
 		if response.Code == globals.PAYMENT_CALLBACK_REQUEST {
 			result = append(result, getCallbackRequestFormattedContent(response))
+		}
+
+		if response.Code == globals.GATEWAY_REQUEST_TIMEOUT {
+			result = append(result, getGatewayTimeoutRequestFormattedContent(response))
+
+			// After adding the log for Soap Request, we should also add that the payment
+			// timed out at the current log's time
+			r := FormattedContent{
+				Header:   "Payment failed because request timed out",
+				DateTime: response.DateTime,
+				Content:  "",
+			}
+			result = append(result, r)
 		}
 	}
 
@@ -83,6 +95,26 @@ func getCallbackRequestFormattedContent(response sumo.ResponseFormat) FormattedC
 	result.Content = `Parameters:
 `
 	result.Content = result.Content + formatKeyValuePairs(response.CallbackRequest)
+
+	return result
+}
+
+func getGatewayTimeoutRequestFormattedContent(response sumo.ResponseFormat) FormattedContent {
+	result := FormattedContent{}
+
+	//fmt.Printf("%+v\n", response)
+
+	command := response.Command
+	result.Header = strings.Title(command) + " request"
+	result.Content = response.SoapRequest
+
+	// In log, we don't show when the request was sent. The log for GATEWAY_REQUEST_TIMEOUT is made
+	// when the request actually times out - meaning, we need to set the time back that many seconds
+	// based on the action to show when the request was sent
+
+	timeoutSeconds := globals.TimeoutCommandMaps[command]
+	timeoutSeconds = -1 * timeoutSeconds
+	result.DateTime = response.DateTime.Add(time.Duration(timeoutSeconds) * time.Second)
 
 	return result
 }

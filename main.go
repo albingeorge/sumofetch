@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bitbucket.org/albingeorgee/sumofetch/formatter"
 	"fmt"
 	"os"
 
@@ -19,9 +20,8 @@ func main() {
 
 	paymentID := os.Args[1]
 
-	r := sumocred.Search(paymentID + " (GATEWAY_SOAP_REQUEST or GATEWAY_REQUEST_TIMEOUT or PAYMENT_CALLBACK_REQUEST or GATEWAY_PAYMENT_REQUEST)  | json auto nodrop")
+	results := sumocred.Search(paymentID + " (GATEWAY_SOAP_REQUEST or GATEWAY_REQUEST_TIMEOUT or PAYMENT_CALLBACK_REQUEST or GATEWAY_PAYMENT_REQUEST)  | json auto nodrop")
 
-	for _, c := range r {
-		fmt.Println(c)
-	}
+	formatter.Format(results)
+
 }

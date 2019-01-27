@@ -1,10 +1,10 @@
 package sumo
 
 import (
-	"bitbucket.org/albingeorgee/sumofetch/globals"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/albingeorge/sumofetch/globals"
 	"net/http"
 	"strconv"
 	"time"
@@ -85,16 +85,26 @@ func parseResponse(response []byte) []ResponseFormat {
 }
 
 func formatResponseMap(json JsonData) []ResponseFormat {
-
 	res := []ResponseFormat{}
 
-	for _, message := range json.Messages {
+	// Loops in the reverse order
+	for i := len(json.Messages); i > 0; i-- {
+		message := json.Messages[i-1]
+
 		r, err := parseSingleMessage(message.Content)
 
 		if err == nil {
 			res = append(res, r)
 		}
 	}
+
+	//for _, message := range json.Messages {
+	//	r, err := parseSingleMessage(message.Content)
+	//
+	//	if err == nil {
+	//		res = append(res, r)
+	//	}
+	//}
 
 	return res
 }

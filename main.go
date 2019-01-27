@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bitbucket.org/albingeorgee/sumofetch/config"
-	"bitbucket.org/albingeorgee/sumofetch/formatter"
-	"bitbucket.org/albingeorgee/sumofetch/printer"
-	"bitbucket.org/albingeorgee/sumofetch/sumo"
 	"fmt"
+	"github.com/albingeorge/sumofetch/config"
+	"github.com/albingeorge/sumofetch/formatter"
+	"github.com/albingeorge/sumofetch/printer"
+	"github.com/albingeorge/sumofetch/sumo"
 	"os"
 )
 

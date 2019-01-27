@@ -1,8 +1,8 @@
 package formatter
 
 import (
-	"bitbucket.org/albingeorgee/sumofetch/globals"
-	"bitbucket.org/albingeorgee/sumofetch/sumo"
+	"github.com/albingeorge/sumofetch/globals"
+	"github.com/albingeorge/sumofetch/sumo"
 	"strings"
 	"time"
 )

@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"bitbucket.org/albingeorgee/sumofetch/config"
+	"github.com/albingeorge/sumofetch/config"
 )
 
 type sumo interface {
@@ -41,7 +41,7 @@ func sendRequest(req *http.Request) []byte {
 	return body
 }
 
-// Search - Creates a search qyery, and fetches it's results
+// Search - Creates a search query, and fetches it's results
 func (sumo Sumocreds) Search(query string) []ResponseFormat {
 
 	queryID := sumo.createSearchQueryID(query)

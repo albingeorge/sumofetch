@@ -89,6 +89,16 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 			result = append(result, r)
 		}
 
+		if response.Code == globals.GATEWAY_ERROR_HASH_GENERATION_ERROR {
+			r := FormattedContent{
+				Header:   "Payment declined because checksum parameter is missing",
+				DateTime: response.DateTime,
+				Content:  "",
+			}
+
+			result = append(result, r)
+		}
+
 		if response.Code == globals.GATEWAY_CHECKSUM_VERIFY_FAILED {
 			r := FormattedContent{
 				Header:   "Payment declined due to invalid checksum",

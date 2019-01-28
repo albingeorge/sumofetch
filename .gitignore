@@ -2,3 +2,5 @@
 config/config.json
 
 vendor/
+
+*.docx

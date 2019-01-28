@@ -4,6 +4,7 @@ import (
 	"baliance.com/gooxml/document"
 	"fmt"
 	"os"
+	"strings"
 )
 import "github.com/albingeorge/sumofetch/formatter"
 
@@ -26,9 +27,9 @@ func PrintDoc(input []formatter.FormattedContent) {
 	addText(doc, "Logs", "Heading1", false)
 
 	for _, content := range input {
-		addText(doc, "\n"+content.Header, "Heading2", true)
-		addText(doc, "\nDate Time: "+content.DateTime.Format("01/02/2006 15:04:05"), "", false)
-		addText(doc, "\n"+content.Content, "", false)
+		addText(doc, content.Header, "Heading2", true)
+		addText(doc, "Date Time: "+content.DateTime.Format("01/02/2006 15:04:05"), "", false)
+		addText(doc, content.Content, "", false)
 
 		addText(doc, "", "", false)
 	}
@@ -46,5 +47,12 @@ func addText(doc *document.Document, content string, style string, bold bool) {
 
 	run := para.AddRun()
 	run.Properties().SetBold(bold)
-	run.AddText(content)
+
+	str := strings.Split(content, "\n")
+
+	for _, c := range str {
+		run.AddText(c)
+		run.AddBreak()
+	}
+
 }

@@ -25,10 +25,18 @@ func Format(format []sumo.ResponseFormat) []FormattedContent {
 		}
 
 		if response.Code == globals.GATEWAY_PAYMENT_REQUEST {
-			result = append(result, getRedirectRequestFormattedContent(response))
+			// Dont print if it's an iFrame flow
+			if response.RedirectRequest["AccuReturnURL"] != "" {
+				result = append(result, getRedirectRequestFormattedContent(response))
+			}
 		}
 
 		if response.Code == globals.PAYMENT_CALLBACK_REQUEST {
+			// Ignore the ISSUER000 response from iFrame flow
+			if response.CallbackRequest["AccuResponseCode"] == "ISSUER000" {
+				continue
+			}
+
 			callbackCount = callbackCount + 1
 			result = append(result, getCallbackRequestFormattedContent(response))
 
@@ -198,7 +206,9 @@ func formatKeyValuePairs(input map[string]string) string {
 
 	res := ""
 	for key, val := range input {
-		res = res + "\"" + key + "\": \"" + val + "\"\n"
+		if val != "" {
+			res = res + "\"" + key + "\": \"" + val + "\"\n"
+		}
 	}
 
 	return res

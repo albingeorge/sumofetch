@@ -10,9 +10,13 @@ import "github.com/albingeorge/sumofetch/formatter"
 
 func PrintDoc(input []formatter.FormattedContent) {
 
-	testName := ""
+	testPath, testName := "", ""
 	if len(os.Args) > 2 {
-		testName = os.Args[2]
+		testPath = os.Args[2]
+		splittedString := strings.Split(testPath, "/")
+
+		testName = splittedString[len(splittedString)-1]
+
 	} else {
 		fmt.Println("Test name not provided. Exiting without printing to document")
 		return
@@ -20,21 +24,27 @@ func PrintDoc(input []formatter.FormattedContent) {
 
 	doc := document.New()
 
-	addText(doc, testName, "Title", false)
+	addText(doc, testName, "", true)
 
-	addText(doc, "Screenshots", "Heading1", false)
-
-	addText(doc, "Logs", "Heading1", false)
+	addText(doc, "Screenshots", "", false)
 
 	for _, content := range input {
-		addText(doc, content.Header, "Heading2", true)
+		addText(doc, content.Header, "", true)
 		addText(doc, "Date Time: "+content.DateTime.Format("01/02/2006 15:04:05"), "", false)
 		addText(doc, content.Content, "", false)
 
 		addText(doc, "", "", false)
 	}
 
-	doc.SaveToFile(testName + ".docx")
+	err := doc.SaveToFile(testPath + ".docx")
+
+	if err != nil {
+		fmt.Println(err)
+		fmt.Println("Error printing to file: " + testPath + ".docx")
+	} else {
+		fmt.Println("Printed to file: " + testPath + ".docx")
+	}
+
 }
 
 func addText(doc *document.Document, content string, style string, bold bool) {

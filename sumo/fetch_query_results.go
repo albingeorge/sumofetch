@@ -40,7 +40,7 @@ type Content struct {
 	RequestAccuCardholderId string `json:"context.request.content.accucardholderid"`
 	RequestAccuGuid         string `json:"context.request.content.accuguid"`
 	RequestAccuReturnURL    string `json:"context.request.content.accureturnurl"`
-	RequestSession          string `json:"context.request.content.accurequestsession"`
+	RequestSession          string `json:"context.request.content.session"`
 	RequestAccuRequestId    string `json:"context.request.content.accurequestid"`
 }
 

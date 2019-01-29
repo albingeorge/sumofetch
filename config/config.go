@@ -3,6 +3,8 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 type Config struct {
@@ -12,7 +14,12 @@ type Config struct {
 
 func GetConfigs() (Config, error) {
 	configuration := Config{}
-	file, err := os.Open("config/config.json")
+	_, path, _, _ := runtime.Caller(0)
+
+	path, _ = filepath.Abs(filepath.Dir(path))
+
+	file, err := os.Open(path + "/config.json")
+
 	if err != nil {
 		return configuration, err
 	}

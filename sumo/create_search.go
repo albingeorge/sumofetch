@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 func (sumo Sumocreds) createSearchQueryID(query string) string {
@@ -26,25 +27,25 @@ func (sumo Sumocreds) createSearchQueryID(query string) string {
 // Will accept the time range if required in the future
 func generateSearchQueryInputs(query string) []byte {
 
-	//current := time.Now()
-	//nowString := current.Format(time.RFC3339)
-	//
-	//then := current.Add(time.Duration(-6) * time.Hour)
-	//twoHoursBack := then.Format(time.RFC3339)
-	//
-	//search := map[string]interface{}{
-	//	"query":    query,
-	//	"from":     twoHoursBack,
-	//	"to":       nowString,
-	//	"timeZone": "Asia/Kolkata",
-	//}
+	current := time.Now()
+	nowString := current.Format(time.RFC3339)
 
-	search := map[string]string{
+	then := current.Add(time.Duration(-2) * time.Hour)
+	twoHoursBack := then.Format(time.RFC3339)
+
+	search := map[string]interface{}{
 		"query":    query,
-		"from":     "2019-01-09T00:00",
-		"to":       "2019-01-09T23:59",
+		"from":     twoHoursBack,
+		"to":       nowString,
 		"timeZone": "Asia/Kolkata",
 	}
+
+	//search := map[string]string{
+	//	"query":    query,
+	//	"from":     "2019-01-09T00:00",
+	//	"to":       "2019-01-09T23:59",
+	//	"timeZone": "Asia/Kolkata",
+	//}
 	jsonString, _ := json.Marshal(search)
 
 	return jsonString

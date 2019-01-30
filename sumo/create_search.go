@@ -30,7 +30,7 @@ func generateSearchQueryInputs(query string) []byte {
 	current := time.Now()
 	nowString := current.Format(time.RFC3339)
 
-	then := current.Add(time.Duration(-2) * time.Hour)
+	then := current.Add(time.Duration(-30) * time.Hour)
 	twoHoursBack := then.Format(time.RFC3339)
 
 	search := map[string]interface{}{

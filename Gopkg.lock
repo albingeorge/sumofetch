@@ -31,6 +31,10 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["baliance.com/gooxml/document"]
+  input-imports = [
+    "baliance.com/gooxml/common",
+    "baliance.com/gooxml/document",
+    "baliance.com/gooxml/measurement",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
